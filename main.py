@@ -20,7 +20,18 @@ def download_pdf(url: str, output_path: str) -> None:
 
 
 def main():
-    # 1. fetch raw data if (not already fetched)
+    # make sure data directory exists
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    # download raw PDFs if they don't already exist
+    for url in RAW_PDF_URLS:
+        filename = url.split("/")[-1]
+        output_path = DATA_DIR / filename
+        if not output_path.exists():
+            print(f"Downloading {filename}...")
+            download_pdf(url, output_path)
+        else:
+            print(f"{filename} already exists, skipping download.")
 
     # fetch from
     # 2. process data into clean tiny-shakespeare like format
