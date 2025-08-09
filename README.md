@@ -1,7 +1,7 @@
 ---
 language:
 - fr
-license: cc0-1.0
+license: MIT
 size_categories:
 - 1M<n<10M
 task_categories:
