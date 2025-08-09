@@ -1,3 +1,34 @@
+---
+language:
+- fr
+license: cc0-1.0
+size_categories:
+- 1M<n<10M
+task_categories:
+- text-generation
+pretty_name: Tiny Molière
+dataset_info:
+  features:
+  - name: text
+    dtype: string
+  splits:
+  - name: train
+    num_bytes: 2377914
+    num_examples: 1
+  download_size: 2377914
+  dataset_size: 2377914
+configs:
+- config_name: default
+  data_files:
+  - split: train
+    path: data/tinymoliere.txt
+tags:
+- literature
+- french-literature
+- moliere
+- classical-text
+- character-level
+---
 # tiny-moliere
 
 A dataset repo generating `tinymoliere.txt` containing Molière's complete work.
