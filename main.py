@@ -90,7 +90,7 @@ def main():
             # compute a clip to remove headers / footers on every pages
             rect = doc[0].bound()
             new_rect = pymupdf.Rect(
-                rect.x0 + 60, rect.y0 + 60, rect.x1 - 60, rect.y1 - 60
+                rect.x0, rect.y0 + 60, rect.x1, rect.y1 - 60
             )
 
             # we ignore the last page
