@@ -1,9 +1,14 @@
+from pathlib import Path
+
 import httpx
+
+DATA_DIR = Path.cwd() / "data"
 
 RAW_PDF_URLS = [
     "https://www.ebooksgratuits.com/ebooksfrance/moliere-oeuvres_completes_1.pdf",
     "https://www.ebooksgratuits.com/ebooksfrance/moliere-oeuvres_completes_2.pdf",
 ]
+
 
 def download_pdf(url: str, output_path: str) -> None:
     """Download a PDF from the given URL and save it to the specified output path."""
@@ -12,6 +17,7 @@ def download_pdf(url: str, output_path: str) -> None:
         with open(output_path, "wb") as f:
             for chunk in response.iter_bytes():
                 f.write(chunk)
+
 
 def main():
     # 1. fetch raw data if (not already fetched)
