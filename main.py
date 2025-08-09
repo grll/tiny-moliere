@@ -75,9 +75,9 @@ def main():
         else:
             print(f"{filename} already exists, skipping download.")
 
-    # overwrite tiny-moliere.txt if it exists
-    if (DATA_DIR / "tiny-moliere.txt").exists():
-        (DATA_DIR / "tiny-moliere.txt").unlink()
+    # overwrite tinymoliere.txt if it exists
+    if (DATA_DIR / "tinymoliere.txt").exists():
+        (DATA_DIR / "tinymoliere.txt").unlink()
 
     # process each PDF and write into a .txt file
     for path in paths:
@@ -96,7 +96,7 @@ def main():
             # we ignore the last page
             for page in doc[toc_end:-1]:
                 page_text = page.get_text(clip=new_rect)
-                with open(DATA_DIR / "tiny-moliere.txt", "a") as f:
+                with open(DATA_DIR / "tinymoliere.txt", "a") as f:
                     f.write(page_text)
 
 
