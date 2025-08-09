@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import httpx
-import pymupdf # type: ignore
+import pymupdf  # type: ignore
 
 # where to save / load data
 DATA_DIR = Path.cwd() / "data"
@@ -24,7 +24,7 @@ def download_pdf(url: str, output_path: str) -> None:
 
 def detect_toc(doc: pymupdf.Document) -> tuple[int, int]:
     """Detect the table of contents in the first quarter of the document.
-    
+
     Args:
         doc: A pymupdf Document object representing the PDF document.
 
@@ -36,7 +36,7 @@ def detect_toc(doc: pymupdf.Document) -> tuple[int, int]:
     end = -1
     i = 0
 
-    for page in doc[:len(doc) // 4]:
+    for page in doc[: len(doc) // 4]:
         if page.get_links():
             start = i
             break
@@ -46,7 +46,7 @@ def detect_toc(doc: pymupdf.Document) -> tuple[int, int]:
         print("No table of contents found in the first quarter of the document.")
         return -1, -1  # no TOC found
 
-    for page in doc[start:len(doc) // 4]:
+    for page in doc[start : len(doc) // 4]:
         if not page.get_links():
             end = i
             break
@@ -75,44 +75,29 @@ def main():
         else:
             print(f"{filename} already exists, skipping download.")
 
-    # fetch from
+    # overwrite tiny-moliere.txt if it exists
+    if (DATA_DIR / "tiny-moliere.txt").exists():
+        (DATA_DIR / "tiny-moliere.txt").unlink()
 
+    # process each PDF and write into a .txt file
     for path in paths:
         with open(path, "rb") as f:
             doc = pymupdf.open(f)
-            # process the document as needed
 
             # detect toc in first quarter of the document
-            toc_start, toc_end = detect_toc(doc)
-            breakpoint()
+            _, toc_end = detect_toc(doc)
 
-            # read toc
+            # compute a clip to remove headers / footers on every pages
+            rect = doc[0].bound()
+            new_rect = pymupdf.Rect(
+                rect.x0 + 60, rect.y0 + 60, rect.x1 - 60, rect.y1 - 60
+            )
 
-            # extract info from toc
-            data = {
-                "title": None,
-                "actors": None,
-                "acts": [
-                    {
-                        "start_page": 0,
-                        "end_page": 0,
-                        "title": None,
-                        "scenes": [
-                            {
-                                "start_page": 0,
-                                "end_page": 0,
-                                "title": None,
-                            }
-                        ]
-                    }
-                ]
-            }
-            breakpoint()
-    # 1. download raw PDFs from URLs
-    # 2. process data into clean tiny-shakespeare like format
-
-    # 3. save processed data to disk
-    print("Hello from tiny-moliere!")
+            # we ignore the last page
+            for page in doc[toc_end:-1]:
+                page_text = page.get_text(clip=new_rect)
+                with open(DATA_DIR / "tiny-moliere.txt", "a") as f:
+                    f.write(page_text)
 
 
 if __name__ == "__main__":
